@@ -9,6 +9,7 @@ This is how I've done, so far.
 1. Start stack via `docker-compose up -d`
 1. Visit `${GRAFANA_HOST_IP}:3000` and login using `${GRAFANA_ADMIN_USER}` and `${GRAFANA_ADMIN_PASSWORD}`
 1. Watch your speedtest results on your new Dashboard **SpeedFlux**
+    ![./assets/speedfluxstack-dashboard.png](./assets/speedfluxstack-dashboard.png)
 
 ---
 ## Modify `.env`-File
