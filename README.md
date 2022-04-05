@@ -1,5 +1,5 @@
 # Docker InfluxDB + Grafana + SpeedFlux
-This repository is kind of a fork from https://github.com/yggdrion/SpeedFlux, but I wanted to have a "All-In-One"-Solution to make the speedtest dashboard work.
+This repository is kind of a fork from https://github.com/yggdrion/SpeedFlux, but I wanted to have a "All-In-One"-Solution to make the speedtest dashboard work without creating a data source or importing a dashboard manually.
 This is how I've done, so far.
 
 ## TL;DR
