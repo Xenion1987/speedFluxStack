@@ -12,7 +12,7 @@ services:
       - INFLUXDB_USER_PASSWORD=${INFLUXDB_USER_PASSWORD}
       - INFLUXDB_DB=${INFLUXDB_DB}
     #volumes:
-    #  - ./influxdb/conf/influxdb.conf:/etc/influxdb/influxdb.conf:ro
+    #  - ${PWD}/influxdb/conf/influxdb.conf:/etc/influxdb/influxdb.conf:ro
     ports:
       - "8086:8086"
 
@@ -29,9 +29,9 @@ services:
       - INFLUXDB_USER_PASSWORD=${INFLUXDB_USER_PASSWORD}
       - INFLUXDB_DB=${INFLUXDB_DB}
     volumes:
-      #- ./grafana/conf/grafana.ini:/etc/grafana/grafana.ini:ro
-      - ./grafana/provisioning/:/etc/grafana/provisioning
-      - ./grafana/dashboardImport/:/var/lib/grafana/dashboards:ro
+      #- ${PWD}/grafana/conf/grafana.ini:/etc/grafana/grafana.ini:ro
+      - ${PWD}/grafana/provisioning/:/etc/grafana/provisioning
+      - ${PWD}/grafana/dashboardImport/:/var/lib/grafana/dashboards:ro
     ports:
       - 3000:3000
     links:

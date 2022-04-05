@@ -54,14 +54,14 @@ To enable custom configuration for InfluxDB, search for those lines:
 ```
 (...)
     #volumes:
-    #  - ./influxdb/conf/influxdb.conf:/etc/influxdb/influxdb.conf:ro
+    #  - ${PWD}/influxdb/conf/influxdb.conf:/etc/influxdb/influxdb.conf:ro
 (...)
 ```
 and replace them with:
 ```
 (...)
     volumes:
-      - ./influxdb/conf/influxdb.conf:/etc/influxdb/influxdb.conf:ro
+      - ${PWD}/influxdb/conf/influxdb.conf:/etc/influxdb/influxdb.conf:ro
 (...)
 ```
 ---
