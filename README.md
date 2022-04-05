@@ -1,62 +1,69 @@
-# Docker InfluxDB + Telegraf + Grafana + SpeedFlux
+# Docker InfluxDB + Grafana + SpeedFlux
+## TL;DR
+1. Rename or copy `.env-example` and update values to fit your needs
+1. Start stack via `docker-compose up -d`
 
-> ## This Readme is still a draft and has to be updated
-
-## Create config files
-In case you want to customize service config files, that's how you get the default values.
-Create directories, first:
-```sh
-mkdir -p influxdb/{data,conf} telegraf/conf grafana/{data,provisioning}
-```
-### influxdb
-```sh
-docker run --rm influxdb:2.1 influxd print-config > influxdb/conf/config.yml
-```
-### telegraf
-```sh
-docker run --rm telegraf cat /etc/telegraf/telegraf.conf > telegraf/conf/telegraf.conf
-```
-
-### Grafana
-```sh
-docker run --rm --entrypoint /bin/bash grafana/grafana-oss:latest -c 'cat $GF_PATHS_CONFIG' > ./grafana/conf/grafana.ini
-```
-
-## Update telegraf config to enable InfluxDBv2
-Comment in at least those lines and update them as shown below:
-```toml
-[[outputs.influxdb]]
-  urls = ["http://influxdb:8086"]
-  database = "${INFLUXDB_DB}" 
-  username = "${INFLUXDB_USER}"
-  password = "${INFLUXDB_USER_PASSWORD}"
-```
-Replace all variables with the final values.
-
+---
 ## Modify `.env`-File
 1. `cp .env-example .env`
 1. Modify varaibles to fit your needs
 
+|Variable Name|Description|Default|
+|---|---|---|
+INFLUXDB_REPORTING_DISABLED|Disables temeletry|true
+INFLUXDB_RETENTION_ENABLED|Enforces disabling retention periods due to errors if enabled|false
+INFLUXDB_PROTOCOLL||http
+INFLUXDB_IP||influxdb
+INFLUXDB_PORT||8086
+INFLUXDB_ADMIN_USER||adminusername
+INFLUXDB_ADMIN_PASSWORD||adminpassword
+INFLUXDB_USER||username
+INFLUXDB_USER_PASSWORD||password
+INFLUXDB_DB||speedflux
+GRAFANA_ADMIN_USER||adminusername
+GRAFANA_ADMIN_PASSWORD||adminpassword
+GF_DATASOURCE_INFLUXDB_NAME|Used for Grafana Provisioning|SpeedfluxDB_v1
+NAMESPACE||None
+INFLUXDB_TAGS|Gather all data|'*'
+SPEEDTEST_INTERVAL||15
+PING_INTERVAL||60 
+PING_TARGETS||1.1.1.1, 8.8.8.8
+LOG_TYPE||info
 
+## Custom config files
+In case you want to customize service config files, that's how you get the default config and modify them.
 
-# **DRAFT** :: InfluxDBv2 :: **DRAFT**
-## Create and update influxdb token
-1. Start the stack
-1. Open the influxdb web frontend `http://[IP-ADRESS]:[PORT]` (default: `http://localhost:8086`)
-1. Login using your credentials
-1. Create a new token
-    1. Load Data > API Tokens > <kbd>+ Generate API Token</kbd> > Read/Write API Token
-    ![./assets/generate_token.png](./assets/generate_token.png)
-1. Copy token to `telegraf.conf`
-1. Restart stack via `docker-compose restart`
+### Create directories, first:
+```sh
+mkdir -p {grafana,influxdb}/conf
+```
+### Grafana
+```sh
+docker run --rm --entrypoint /bin/bash grafana/grafana-oss:latest -c 'cat $GF_PATHS_CONFIG' > ./grafana/conf/grafana.ini
+```
+### influxdb
+```sh
+docker run --rm influxdb:1.8 influxd print-config > influxdb/conf/config.yml
+```
 
-## Add InfluxDB as Grafana Datasource
-1. Login with your admin credentials
-1. Configuration > Data sources > <kbd>Add data source</kbd> > InfluxDB
-    1. Query Language: `Flux`
-    1. URL: `http://[INFLUXDB_DOCKER_IP]:8086`
-    1. InfluxDB Details
-        1. Organization: `${INFLUXDB_ORG}`
-        1. Token: `${INFLUXDB_API_TOKEN}`
-        1. Default Bucket: `${INFLUXDB_BUCKET}`
-    1. <kbd>Save & test</kbd>
+### Uncomment volume mounts in `docker-compose.yml`
+Uncomment the volume mounts of the service you want to enable the custom config for.
+
+#### Example:
+To enable custom configuration for InfluxDB, search for those lines:
+```
+(...)
+    #volumes:
+    #  - ./influxdb/conf/influxdb.conf:/etc/influxdb/influxdb.conf:ro
+(...)
+```
+and replace them with:
+```
+(...)
+    volumes:
+      - ./influxdb/conf/influxdb.conf:/etc/influxdb/influxdb.conf:ro
+(...)
+```
+---
+
+*SpeedFlux* looks to have been originally written by https://github.com/aidengilmartin/speedtest-to-influxdb and I modified it from https://github.com/yggdrion/SpeedFlux. They did the hard work, I've continued to modify it though to fit my needs.

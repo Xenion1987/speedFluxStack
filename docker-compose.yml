@@ -1,4 +1,4 @@
-version: '3'
+version: "3"
 services:
   influxdb:
     image: influxdb:1.8
@@ -11,23 +11,10 @@ services:
       - INFLUXDB_USER=${INFLUXDB_USER}
       - INFLUXDB_USER_PASSWORD=${INFLUXDB_USER_PASSWORD}
       - INFLUXDB_DB=${INFLUXDB_DB}
-    volumes:
-      - ./influxdb/data/:/var/lib/influxdb:rw
-      - ./influxdb/conf/influxdb.conf:/etc/influxdb/influxdb.conf:ro
+    #volumes:
+    #  - ./influxdb/conf/influxdb.conf:/etc/influxdb/influxdb.conf:ro
     ports:
       - "8086:8086"
-
-  telegraf:
-    image: telegraf
-    container_name: telegraf
-    environment:
-      - INFLUXDB_USER=${INFLUXDB_USER}
-      - INFLUXDB_USER_PASSWORD=${INFLUXDB_USER_PASSWORD}
-      - INFLUXDB_DB=${INFLUXDB_DB}
-    volumes:
-      - ./telegraf/conf/telegraf.conf:/etc/telegraf/telegraf.conf:ro
-    links:
-      - influxdb
 
   grafana:
     image: grafana/grafana-oss
@@ -42,19 +29,19 @@ services:
       - INFLUXDB_USER_PASSWORD=${INFLUXDB_USER_PASSWORD}
       - INFLUXDB_DB=${INFLUXDB_DB}
     volumes:
-      - ./grafana/conf/grafana.ini:/etc/grafana/grafana.ini:ro
+      #- ./grafana/conf/grafana.ini:/etc/grafana/grafana.ini:ro
       - ./grafana/provisioning/:/etc/grafana/provisioning
       - ./grafana/dashboardImport/:/var/lib/grafana/dashboards:ro
-    ports: 
+    ports:
       - 3000:3000
     links:
       - influxdb
 
   speedflux:
     container_name: speedflux
-    restart: always 
+    restart: unless-stopped
     build: .
-    environment: 
+    environment:
       - NAMESPACE=${NAMESPACE}
       - INFLUXDB_IP=${INFLUXDB_IP}
       - INFLUXDB_USER=${INFLUXDB_USER}
@@ -66,3 +53,5 @@ services:
       - PING_TARGETS=${PING_TARGETS}
       - LOG_TYPE=${LOG_TYPE}
     image: speedflux
+    links:
+      - influxdb
