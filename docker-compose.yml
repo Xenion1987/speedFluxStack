@@ -36,6 +36,8 @@ services:
       - 3000:3000
     links:
       - influxdb
+    depends_on:
+      - influxdb
 
   speedflux:
     container_name: speedflux
@@ -54,4 +56,6 @@ services:
       - LOG_TYPE=${LOG_TYPE}
     image: speedflux
     links:
+      - influxdb
+    depends_on:
       - influxdb
