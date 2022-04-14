@@ -11,7 +11,8 @@ services:
       - INFLUXDB_USER=${INFLUXDB_USER}
       - INFLUXDB_USER_PASSWORD=${INFLUXDB_USER_PASSWORD}
       - INFLUXDB_DB=${INFLUXDB_DB}
-    #volumes:
+    volumes:
+      - influxdb_data:/var/lib/influxdb
     #  - ${PWD}/influxdb/conf/influxdb.conf:/etc/influxdb/influxdb.conf:ro
     ports:
       - "8086:8086"
@@ -59,3 +60,6 @@ services:
       - influxdb
     depends_on:
       - influxdb
+
+volumes:
+  influxdb_data:
