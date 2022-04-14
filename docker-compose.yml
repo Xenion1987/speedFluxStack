@@ -30,6 +30,7 @@ services:
       - INFLUXDB_USER_PASSWORD=${INFLUXDB_USER_PASSWORD}
       - INFLUXDB_DB=${INFLUXDB_DB}
     volumes:
+      - grafana_data:/var/lib/grafana
       #- ${PWD}/grafana/conf/grafana.ini:/etc/grafana/grafana.ini:ro
       - ${PWD}/grafana/provisioning/:/etc/grafana/provisioning
       - ${PWD}/grafana/dashboardImport/:/var/lib/grafana/dashboards:ro
@@ -63,3 +64,4 @@ services:
 
 volumes:
   influxdb_data:
+  grafana_data:
