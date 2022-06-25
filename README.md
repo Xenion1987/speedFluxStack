@@ -2,19 +2,27 @@
 This repository is kind of a fork from https://github.com/yggdrion/SpeedFlux, but I wanted to have a "All-In-One"-Solution to make the speedtest dashboard work without creating a data source or importing a dashboard manually.
 This is how I've done, so far.
 
+![./assets/speedfluxstack-dashboard.png](./assets/speedfluxstack-dashboard.png)
+
 ## TL;DR
+
+<details><summary>Click to read the summary</summary>
+
 1. Install [Docker](https://docs.docker.com/get-docker/) and [Docker-Compose](https://docs.docker.com/compose/install/)
 1. Clone this repository
 1. Rename or copy `.env-example` as `.env` and update values to fit your needs
 1. Start stack via `docker-compose up -d`
-1. Visit `${GRAFANA_HOST_IP}:3000` and login using `${GRAFANA_ADMIN_USER}` and `${GRAFANA_ADMIN_PASSWORD}`
+1. Visit `${GRAFANA_HOST_IP}:3000` and log in using `${GRAFANA_ADMIN_USER}` and `${GRAFANA_ADMIN_PASSWORD}`
 1. Watch your speedtest results on your new Dashboard **SpeedFlux**
-    ![./assets/speedfluxstack-dashboard.png](./assets/speedfluxstack-dashboard.png)
+</details>
 
 ---
-## Modify `.env`-File
+
+# Modify `.env`-File
 1. `cp .env-example .env`
 1. Modify varaibles to fit your needs
+
+<details><summary>Click to expand variable table</summary>
 
 |Variable Name|Description|Default|
 |---|---|---|
@@ -37,27 +45,28 @@ SPEEDTEST_INTERVAL||15
 PING_INTERVAL||60 
 PING_TARGETS||1.1.1.1, 8.8.8.8
 LOG_TYPE||info
+</details>
 
-## Custom config files
+# Custom config files
 In case you want to customize service config files, that's how you get the default config and modify them.
 
-### Create directories, first:
+## Create directories, first:
 ```sh
 mkdir -p {grafana,influxdb}/conf
 ```
-### Grafana
+## Grafana
 ```sh
 docker run --rm --entrypoint /bin/bash grafana/grafana-oss:latest -c 'cat $GF_PATHS_CONFIG' > ./grafana/conf/grafana.ini
 ```
-### influxdb
+## influxdb
 ```sh
 docker run --rm influxdb:1.8 influxd print-config > influxdb/conf/config.yml
 ```
 
-### Uncomment volume mounts in `docker-compose.yml`
+## Uncomment volume mounts in `docker-compose.yml`
 Uncomment the volume mounts of the service you want to enable the custom config for.
 
-#### Example:
+### Example:
 To enable custom configuration for InfluxDB, search for those lines:
 ```
 (...)
